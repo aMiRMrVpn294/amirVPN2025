@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AmirMrVpn</title>
+  <style>
+:root {
+  --main-color: #00c6ff;
+  --accent-color: #ff4081;
+  --text-color: white;
+  --bg-dark: black;
+}
+
+html, body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+.container {
+  flex: 1;
+}
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  animation: fadeInDown 1s ease;
+}
+
+.logo {
+  font-size: 2.5em;
+  font-weight: bold;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(0,255,255,0.5);
+  animation: fadeInDown 1s ease;
+}
+
+h1 {
+color: white;
+  margin-top: 10px;
+  font-size: 1.8em;
+  animation: fadeIn 1.5s ease;
+}
+
+.filter {
+  margin: 10px auto;
+  text-align: center;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.filter button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--main-color);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.filter button:hover {
+  background: #0072ff;
+  color: white;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  background: gray;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  animation: fadeInUp 1s ease;
+}
+
+.config {
+  background:  rgba(255, 255, 255, 0.2);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  word-break: break-word;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.5s ease forwards;
+}
+
+.config:nth-child(n) {
+  animation-delay: calc(0.1s * var(--i));
+}
+
+.copy-btn {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: #e91e63;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 0.9em;
+  color: #ccc;
+  text-align: center;
+  animation: fadeIn 2s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeInDown {
+  from {opacity: 0; transform: translateY(-30px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+  from {opacity: 0; transform: translateY(30px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 1.4em;
+  }
+  .copy-btn {
+    font-size: 0.8em;
+    padding: 4px 8px;
+  }
+  .logo {
+    font-size: 2em;
+  }
+  .container {
+    padding: 15px;
+  }
+}
+</style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+
+  <header>
+    <div class="logo">AmirMrVpn</div>
+    <h1>🔐 کانفیگ‌های AmirMrVpn</h1>
+  </header>
+
+  <div class="filter">
+    <button onclick="applyFilter('all')">همه</button>
+    <button onclick="applyFilter('vmess')">vmess</button>
+    <button onclick="applyFilter('vless')">vless</button>
+    <button onclick="applyFilter('trojan')">trojan</button>
+  </div>
+
+  <div class="container" id="configs">در حال بارگذاری...</div>
+  <div class="footer">ساخته شده توسط @Sepahbod_Khatar</div>
+
+  <script>
+  	// ماتریکس هکری با متن AmirMrVpn
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const text = "AmirMrVpn ";
+const columns = canvas.width / 100;
+const drops = Array(Math.floor(columns)).fill(1);
+
+function drawMatrix() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0f0";
+  ctx.font = "20px monospace";
+
+  for (let i = 0; i < drops.length; i++) {
+    const char = text[Math.floor(Math.random() * text.length)];
+    ctx.fillText(char, i * 100, drops[i] * 20);
+
+    if (drops[i] * 20 > canvas.height || Math.random() > 0.95) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+}
+
+setInterval(drawMatrix, 50);
+
+// دریافت کانفیگ‌ها و اصلاح نام
+const configUrl = "https://bpb-panel-6y9.pages.dev/sub/normal/59dd8a31-e24b-4aec-8978-ac2cb2e3c2fc?app=xray";
+let allConfigs = [];
+
+async function fetchConfigs() {
+  try {
+    const res = await fetch(configUrl);
+    const text = await res.text();
+    const decoded = atob(text.trim());
+    const lines = decoded.split("\n").filter(line => line.trim() !== "");
+
+    allConfigs = lines.map((line, index) => {
+      let updatedLine = line;
+      let type = "unknown";
+
+      try {
+        if (line.startsWith("vmess://")) {
+          const json = JSON.parse(atob(line.slice(8)));
+          json.ps = "AmirMrVpn";
+          updatedLine = "vmess://" + btoa(JSON.stringify(json));
+          type = "vmess";
+        } else if (line.startsWith("vless://")) {
+          const url = new URL(line);
+          url.searchParams.set("ps", "AmirMrVpn");
+          updatedLine = url.toString();
+          type = "vless";
+        } else if (line.startsWith("trojan://")) {
+          const url = new URL(line);
+          url.searchParams.set("ps", "AmirMrVpn");
+          updatedLine = url.toString();
+          type = "trojan";
+        }
+      } catch (e) {
+        console.warn("خطا در پردازش کانفیگ:", e);
+      }
+
+      return { text: updatedLine, type };
+    });
+
+    applyFilter("all");
+  } catch (error) {
+    document.getElementById("configs").textContent = "😢 خطا در دریافت کانفیگ‌ها";
+    console.error(error);
+  }
+}
+
+function applyFilter(protocol) {
+  const container = document.getElementById("configs");
+  container.innerHTML = "";
+
+  const filtered = protocol === "all"
+    ? allConfigs
+    : allConfigs.filter(cfg => cfg.type === protocol);
+
+  filtered.forEach((cfg, index) => {
+    const div = document.createElement("div");
+    div.className = "config";
+    div.style.setProperty('--i', index);
+    div.textContent = cfg.text;
+
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.textContent = "کپی";
+    btn.onclick = () => {
+      navigator.clipboard.writeText(cfg.text);
+      btn.textContent = "✅ کپی شد";
+      setTimeout(() => btn.textContent = "کپی", 2000);
+    };
+
+    div.appendChild(btn);
+    container.appendChild(div);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = "😢 هیچ کانفیگی با این پروتکل یافت نشد.";
+  }
+}
+
+fetchConfigs();
+</script>
+</body>
+</html>
